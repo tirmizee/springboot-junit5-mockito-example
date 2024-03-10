@@ -108,3 +108,58 @@ public class ParameterTest {
 }
 ```
 
+Ex. 5
+
+```java
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
+    Optional<UserEntity> findByUsername(String username);
+}
+```
+```java
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private UserRepository userRepository;
+
+    public UserEntity findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("No value present"));
+    }
+
+}
+```
+```java
+@SpringBootTest
+@ActiveProfiles("ut")
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private UserService userService;
+
+    @Test
+    public void whenFindUserByEmail_thenReturnUser() {
+
+        // Given
+        UserEntity mockUser = new UserEntity();
+        mockUser.setUserId(1L);
+        mockUser.setUsername("tirmizee");
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(mockUser));
+
+        // When
+        UserEntity found = userService.findByUsername("tirmizee");
+
+        // Then
+        assertEquals("tirmizee", found.getUsername());
+
+    }
+
+
+}
+```
+
+
