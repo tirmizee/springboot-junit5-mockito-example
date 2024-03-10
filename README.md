@@ -130,8 +130,6 @@ public class UserService {
 }
 ```
 ```java
-@SpringBootTest
-@ActiveProfiles("ut")
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
@@ -157,7 +155,6 @@ class UserServiceTest {
         assertEquals("tirmizee", found.getUsername());
 
     }
-
 
 }
 ```
